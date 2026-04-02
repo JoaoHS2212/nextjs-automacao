@@ -4,8 +4,9 @@ export async function gerarAbordagens(leadsRaw: string) {
   const apiKey = process.env.GROQ_API_KEY;
   const leads = leadsRaw.split('\n').filter(l => l.trim() !== "");
 
+  // Alterado para retornar um código de erro específico
   if (leads.length > 3) {
-    return { error: "⚠️ Limite grátis: 3 leads por vez. Assine o Pro para listas ilimitadas!" };
+    return { error: "LIMIT_REACHED" };
   }
 
   try {
@@ -20,7 +21,7 @@ export async function gerarAbordagens(leadsRaw: string) {
         messages: [
           {
             role: "system",
-            content: "Você é um especialista em vendas. Gere abordagens personalizadas curtas para cada lead enviado. Seja persuasivo e profissional."
+            content: "Você é um mestre em vendas. Gere abordagens personalizadas curtas, diretas e matadoras para cada lead enviado."
           },
           {
             role: "user",
@@ -33,6 +34,6 @@ export async function gerarAbordagens(leadsRaw: string) {
     const data = await response.json();
     return { data: data.choices[0].message.content };
   } catch (e) {
-    return { error: "Erro técnico na IA. Verifique as chaves na Vercel." };
+    return { error: "Erro na conexão com a IA." };
   }
 }
